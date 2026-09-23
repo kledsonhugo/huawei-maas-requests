@@ -4,7 +4,7 @@ Script em Python para executar requisições concorrentes à API de chat OpenAI-
 
 ## Requisitos
 
-- Python 3.9 ou superior.
+- Python 3.8 ou superior.
 - Acesso à API Huawei MaaS e uma chave válida para os modelos configurados.
 - Dependência `requests`.
 
@@ -17,13 +17,13 @@ python3 -m pip install requests
 Configure a chave da API no ambiente. Não a coloque no código nem a compartilhe:
 
 ```bash
-export API_KEY="sua-chave-aqui"
+export MAAS_API_KEY="sua-chave-aqui"
 ```
 
 No PowerShell:
 
 ```powershell
-$env:API_KEY = "sua-chave-aqui"
+$env:MAAS_API_KEY = "sua-chave-aqui"
 ```
 
 ## Executar o teste
@@ -34,7 +34,7 @@ Na pasta do projeto, execute:
 python3 maas_parallel_test.py
 ```
 
-Por padrão, o script envia 10 chamadas para cada modelo em `MODELS` (`glm-5.2` e `glm-5.3`), usando até 20 workers. Um limitador compartilhado mantém o envio em até 4 requisições por segundo; respostas HTTP 429 são repetidas com espera exponencial, até o máximo configurado. As chamadas dos modelos concorrem no mesmo teste, portanto os resultados refletem essa carga compartilhada.
+Por padrão, o script envia 100 chamadas para cada modelo em `MODELS` (`glm-5.2` e `glm-5.3`), totalizando 200 chamadas e até 200 workers (`MAX_WORKERS = len(MODELS) * CALLS_PER_MODEL`). Um limitador compartilhado mantém o envio em até 4 requisições por segundo; respostas HTTP 429 são repetidas com espera exponencial, até o máximo configurado. As chamadas dos modelos concorrem no mesmo teste, portanto os resultados refletem essa carga compartilhada.
 
 Para adaptar o teste, altere no início de `maas_parallel_test.py`:
 
@@ -48,7 +48,7 @@ O limitador local ajuda a respeitar uma taxa de envio, mas não garante ausênci
 
 ## Resultado no terminal
 
-Durante a execução, cada chamada concluída imprime modelo, identificador, status HTTP, latência E2E, TTFT e, quando houver, tentativas repetidas. Ao final, há um resumo por modelo. Exemplo de uma execução:
+Durante a execução, cada chamada concluída imprime modelo, identificador, status HTTP, latência E2E, TTFT e, quando houver, tentativas repetidas. Ao final, há um resumo por modelo. O exemplo abaixo é de uma execução anterior com 10 chamadas por modelo; o padrão atual é 100 chamadas por modelo:
 
 ```text
 Executando 20 chamadas em paralelo (10 por modelo, modelos: glm-5.2, glm-5.3)...
@@ -87,6 +87,8 @@ Esses valores são de uma execução específica e servem apenas para ilustrar o
 ## Relatório HTML
 
 Ao terminar, o script grava `maas_report.html` na mesma pasta do arquivo Python. Abra-o em um navegador. O relatório apresenta cards de resumo, tabelas de métricas, gráfico de latência por chamada e detalhes individuais.
+
+As capturas abaixo são de uma execução de referência anterior, com 10 chamadas por modelo. Para ver os resultados da configuração atual (100 chamadas por modelo), abra o relatório gerado após executar o script.
 
 ### Resumo da execução
 
@@ -127,8 +129,8 @@ O relatório mostra a média de QPS/TPM por modelo usando a duração total da e
 ## Uso por outras pessoas
 
 1. Obtenha acesso ao Huawei MaaS e confirme que sua conta pode invocar os modelos desejados.
-2. Disponibilize Python 3.9+ e instale `requests`.
-3. Defina `API_KEY` no ambiente da máquina que executará o teste.
+2. Disponibilize Python 3.8+ e instale `requests`.
+3. Defina `MAAS_API_KEY` no ambiente da máquina que executará o teste. `API_KEY` também é aceita para compatibilidade.
 4. Copie/clone este projeto e ajuste modelos, quantidade de chamadas, prompt e taxa de envio para a quota da sua conta.
 5. Execute `python3 maas_parallel_test.py` e abra o `maas_report.html` gerado.
 

@@ -18,8 +18,8 @@ usadas para avaliar inferência de LLM:
 Requisitos:
     - Python 3.8+
     - pip install requests
-    - Variável de ambiente API_KEY definida:
-        export API_KEY="sua-chave-aqui"
+    - Variável de ambiente MAAS_API_KEY definida:
+        export MAAS_API_KEY="sua-chave-aqui"
 
 Uso:
     python maas_parallel_test.py
@@ -40,11 +40,11 @@ import requests
 # Configuração
 # ---------------------------------------------------------------------------
 URL = "https://api-ap-southeast-1.modelarts-maas.com/openai/v1/chat/completions"
-API_KEY = os.environ.get("API_KEY")
+API_KEY = os.environ.get("MAAS_API_KEY") or os.environ.get("API_KEY")
 
 MODELS = ["glm-5.2", "glm-5.3"]
-CALLS_PER_MODEL = 10
-MAX_WORKERS = len(MODELS) * CALLS_PER_MODEL  # 20 chamadas em paralelo
+CALLS_PER_MODEL = 100
+MAX_WORKERS = len(MODELS) * CALLS_PER_MODEL  # 200 chamadas em paralelo
 TIMEOUT = 120  # segundos por chamada
 MAX_RETRIES = 5  # tentativas por chamada em caso de HTTP 429 (rate limit)
 RATE_LIMIT_RPS = 4  # limite do endpoint: 4 requisições por segundo
@@ -688,7 +688,9 @@ def build_html(results: list, total_elapsed: float) -> str:
 
 def main() -> None:
     if not API_KEY:
-        raise SystemExit("Erro: defina a variável de ambiente API_KEY antes de executar.")
+        raise SystemExit(
+            "Erro: defina MAAS_API_KEY (ou API_KEY, por compatibilidade) antes de executar."
+        )
 
     tasks = [(model, i) for model in MODELS for i in range(1, CALLS_PER_MODEL + 1)]
 
