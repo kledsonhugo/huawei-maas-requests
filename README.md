@@ -1,6 +1,7 @@
 # Teste de requisições a modelos Huawei MaaS
 
 Script em Python para executar requisições concorrentes à API de chat OpenAI-compatible do Huawei MaaS.
+
 As chamadas usam streaming e geram um resumo no terminal e um relatório HTML com métricas de latência, throughput, tokens e confiabilidade.
 
 ## Requisitos
