@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório MaaS — Teste Paralelo</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: #f1f5f9;
+        color: #1e293b;
+        padding: 2rem;
+        line-height: 1.5;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 {
+        font-size: 1.6rem;
+        margin-bottom: 0.25rem;
+        background: linear-gradient(90deg, #6366f1, #10b981);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        border-top: 4px solid #6366f1;
+    }
+    .card-value { font-size: 1.9rem; font-weight: 700; }
+    .card-label { color: #64748b; font-size: 0.85rem; margin-top: 0.25rem; }
+    .section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+    }
+    .section h2 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: #334155;
+    }
+    .section h3 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+    th, td {
+        padding: 0.6rem 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    tr:hover td { background: #f8fafc; }
+    .dot {
+        display: inline-block;
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+    .badge {
+        padding: 0.15rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .badge.ok { background: #d1fae5; color: #065f46; }
+    .badge.err { background: #fee2e2; color: #991b1b; }
+    .mono {
+        font-family: 'Cascadia Code', 'Fira Code', monospace;
+        font-size: 0.8rem;
+        max-width: 320px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .chart-section { margin-bottom: 2rem; }
+    .chart-section:last-child { margin-bottom: 0; }
+    .chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.5rem;
+        height: 220px;
+        padding-top: 1.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .bar-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        height: 100%;
+        max-width: 60px;
+    }
+    .bar {
+        width: 70%;
+        border-radius: 6px 6px 0 0;
+        min-height: 4px;
+        transition: opacity 0.2s;
+        position: relative;
+        background: #94a3b8;
+    }
+    .bar-ttft {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        background: rgba(15, 23, 42, 0.55);
+        border-radius: 6px 6px 0 0;
+    }
+    .bar:hover { opacity: 0.85; }
+    .chart-legend {
+        font-size: 0.75rem;
+        font-weight: 400;
+        color: #94a3b8;
+        margin-left: 0.75rem;
+    }
+    .bar-value {
+        font-size: 0.7rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+    }
+    .bar-label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin-top: 0.4rem;
+    }
+    footer {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.8rem;
+        margin-top: 1rem;
+    }
+    .note {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-top: 0.75rem;
+        line-height: 1.4;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Relatório de Teste Paralelo — Huawei MaaS</h1>
+    <p class="subtitle">Gerado em 23/09/2026 13:57:10 · 20 chamadas em paralelo
+        (10 por modelo) · Endpoint: https://api-ap-southeast-1.modelarts-maas.com/openai/v1/chat/completions</p>
+
+    <div class="cards">
+    <div class="card">
+        <div class="card-value">20/20</div>
+        <div class="card-label">Chamadas bem-sucedidas</div>
+    </div>
+    <div class="card">
+        <div class="card-value">0.0%</div>
+        <div class="card-label">Error rate (geral)</div>
+    </div>
+    <div class="card">
+        <div class="card-value">26.47s</div>
+        <div class="card-label">Tempo total (paralelo)</div>
+    </div>
+    <div class="card" style="border-top: 4px solid #6366f1">
+        <div class="card-value" style="color:#6366f1">4.67s</div>
+        <div class="card-label">glm-5.2 · TTFT médio</div>
+    </div>
+    <div class="card" style="border-top: 4px solid #10b981">
+        <div class="card-value" style="color:#10b981">1.88s</div>
+        <div class="card-label">glm-5.3 · TTFT médio</div>
+    </div>
+    </div>
+
+    <div class="section">
+        <h2>Métricas de latência e geração</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Modelo</th>
+                    <th>TTFT médio</th>
+                    <th>TTFT P50 / P90</th>
+                    <th>TPOT médio</th>
+                    <th>Output tokens/sec</th>
+                    <th>E2E Latency média</th>
+                    <th>E2E P50 / P90 / P99</th>
+                </tr>
+            </thead>
+            <tbody>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>4.67s</td>
+            <td>4.40s / 5.46s</td>
+            <td>21ms</td>
+            <td>47.6</td>
+            <td>19.89s</td>
+            <td>19.77s / 23.15s / 24.56s</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>1.88s</td>
+            <td>1.76s / 2.07s</td>
+            <td>22ms</td>
+            <td>51.9</td>
+            <td>13.41s</td>
+            <td>14.25s / 19.09s / 19.49s</td>
+        </tr>
+            </tbody>
+        </table>
+        <p class="note">TTFT = tempo até o primeiro token · TPOT = tempo médio entre tokens
+            · E2E = latência total da requisição. Valores em ms quando &lt; 1s.</p>
+    </div>
+
+    <div class="section">
+        <h2>Capacidade, confiabilidade e tokens</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Modelo</th>
+                    <th>QPS atingido</th>
+                    <th>TPM atingido</th>
+                    <th>Sucessos</th>
+                    <th>Error rate</th>
+                    <th>Tokens input médio</th>
+                    <th>Tokens output médio</th>
+                    <th>Tokens raciocínio médio</th>
+                    <th>Total tokens</th>
+                </tr>
+            </thead>
+            <tbody>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>0.38</td>
+            <td>17372</td>
+            <td>10/10</td>
+            <td>0.0%</td>
+            <td>41</td>
+            <td>725</td>
+            <td>605</td>
+            <td>7663</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>0.38</td>
+            <td>12808</td>
+            <td>10/10</td>
+            <td>0.0%</td>
+            <td>41</td>
+            <td>524</td>
+            <td>384</td>
+            <td>5650</td>
+        </tr>
+            </tbody>
+        </table>
+        <p class="note">QPS/TPM refletem a capacidade <strong>atingida neste teste</strong>
+            (limitada pelo rate limit de 4 req/s do endpoint), não o limite do serviço.
+            NPU utilization (Ascend) não é mensurável via API de inferência — requer
+            Huawei Cloud Eye / console ModelArts.</p>
+    </div>
+
+    <div class="section">
+        <h2>Latência por chamada (E2E com destaque de TTFT)</h2>
+        
+        <div class="chart-section">
+            <h3><span class="dot" style="background:#6366f1"></span>glm-5.2
+                <span class="chart-legend">parte escura = TTFT · barra inteira = E2E</span></h3>
+            <div class="chart">
+            <div class="bar-group">
+                <div class="bar-value">18.0s</div>
+                <div class="bar" style="height:72.8%;background:#6366f1" title="Chamada 1: E2E 17.98s, TTFT 5.29s, 575 tokens de saída">
+                    <div class="bar-ttft" style="height:29.4%"></div>
+                </div>
+                <div class="bar-label">#01</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">17.9s</div>
+                <div class="bar" style="height:72.5%;background:#6366f1" title="Chamada 2: E2E 17.91s, TTFT 4.19s, 617 tokens de saída">
+                    <div class="bar-ttft" style="height:23.4%"></div>
+                </div>
+                <div class="bar-label">#02</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">15.8s</div>
+                <div class="bar" style="height:63.9%;background:#6366f1" title="Chamada 3: E2E 15.79s, TTFT 4.64s, 554 tokens de saída">
+                    <div class="bar-ttft" style="height:29.4%"></div>
+                </div>
+                <div class="bar-label">#03</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">18.0s</div>
+                <div class="bar" style="height:72.6%;background:#6366f1" title="Chamada 4: E2E 17.95s, TTFT 3.69s, 703 tokens de saída">
+                    <div class="bar-ttft" style="height:20.6%"></div>
+                </div>
+                <div class="bar-label">#04</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">19.8s</div>
+                <div class="bar" style="height:80.1%;background:#6366f1" title="Chamada 5: E2E 19.79s, TTFT 4.15s, 744 tokens de saída">
+                    <div class="bar-ttft" style="height:21.0%"></div>
+                </div>
+                <div class="bar-label">#05</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">23.0s</div>
+                <div class="bar" style="height:93.0%;background:#6366f1" title="Chamada 6: E2E 22.98s, TTFT 4.56s, 877 tokens de saída">
+                    <div class="bar-ttft" style="height:19.8%"></div>
+                </div>
+                <div class="bar-label">#06</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">20.1s</div>
+                <div class="bar" style="height:81.3%;background:#6366f1" title="Chamada 7: E2E 20.10s, TTFT 4.25s, 750 tokens de saída">
+                    <div class="bar-ttft" style="height:21.1%"></div>
+                </div>
+                <div class="bar-label">#07</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">24.7s</div>
+                <div class="bar" style="height:100.0%;background:#6366f1" title="Chamada 8: E2E 24.71s, TTFT 6.98s, 848 tokens de saída">
+                    <div class="bar-ttft" style="height:28.3%"></div>
+                </div>
+                <div class="bar-label">#08</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">19.8s</div>
+                <div class="bar" style="height:80.0%;background:#6366f1" title="Chamada 9: E2E 19.76s, TTFT 4.71s, 737 tokens de saída">
+                    <div class="bar-ttft" style="height:23.9%"></div>
+                </div>
+                <div class="bar-label">#09</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">21.9s</div>
+                <div class="bar" style="height:88.8%;background:#6366f1" title="Chamada 10: E2E 21.94s, TTFT 4.20s, 848 tokens de saída">
+                    <div class="bar-ttft" style="height:19.1%"></div>
+                </div>
+                <div class="bar-label">#10</div>
+            </div></div>
+        </div>
+        <div class="chart-section">
+            <h3><span class="dot" style="background:#10b981"></span>glm-5.3
+                <span class="chart-legend">parte escura = TTFT · barra inteira = E2E</span></h3>
+            <div class="chart">
+            <div class="bar-group">
+                <div class="bar-value">7.3s</div>
+                <div class="bar" style="height:29.5%;background:#10b981" title="Chamada 1: E2E 7.28s, TTFT 1.76s, 448 tokens de saída">
+                    <div class="bar-ttft" style="height:24.1%"></div>
+                </div>
+                <div class="bar-label">#01</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">12.1s</div>
+                <div class="bar" style="height:49.0%;background:#10b981" title="Chamada 2: E2E 12.11s, TTFT 1.79s, 764 tokens de saída">
+                    <div class="bar-ttft" style="height:14.8%"></div>
+                </div>
+                <div class="bar-label">#02</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">15.1s</div>
+                <div class="bar" style="height:61.2%;background:#10b981" title="Chamada 3: E2E 15.13s, TTFT 1.77s, 484 tokens de saída">
+                    <div class="bar-ttft" style="height:11.7%"></div>
+                </div>
+                <div class="bar-label">#03</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">16.2s</div>
+                <div class="bar" style="height:65.4%;background:#10b981" title="Chamada 4: E2E 16.17s, TTFT 1.75s, 521 tokens de saída">
+                    <div class="bar-ttft" style="height:10.8%"></div>
+                </div>
+                <div class="bar-label">#04</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">19.0s</div>
+                <div class="bar" style="height:77.1%;background:#10b981" title="Chamada 5: E2E 19.04s, TTFT 1.65s, 629 tokens de saída">
+                    <div class="bar-ttft" style="height:8.7%"></div>
+                </div>
+                <div class="bar-label">#05</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">19.5s</div>
+                <div class="bar" style="height:79.1%;background:#10b981" title="Chamada 6: E2E 19.54s, TTFT 1.76s, 643 tokens de saída">
+                    <div class="bar-ttft" style="height:9.0%"></div>
+                </div>
+                <div class="bar-label">#06</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">13.9s</div>
+                <div class="bar" style="height:56.3%;background:#10b981" title="Chamada 7: E2E 13.91s, TTFT 1.73s, 442 tokens de saída">
+                    <div class="bar-ttft" style="height:12.4%"></div>
+                </div>
+                <div class="bar-label">#07</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">14.6s</div>
+                <div class="bar" style="height:59.1%;background:#10b981" title="Chamada 8: E2E 14.60s, TTFT 1.70s, 464 tokens de saída">
+                    <div class="bar-ttft" style="height:11.6%"></div>
+                </div>
+                <div class="bar-label">#08</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">7.6s</div>
+                <div class="bar" style="height:30.6%;background:#10b981" title="Chamada 9: E2E 7.57s, TTFT 1.98s, 406 tokens de saída">
+                    <div class="bar-ttft" style="height:26.1%"></div>
+                </div>
+                <div class="bar-label">#09</div>
+            </div>
+            <div class="bar-group">
+                <div class="bar-value">8.8s</div>
+                <div class="bar" style="height:35.6%;background:#10b981" title="Chamada 10: E2E 8.79s, TTFT 2.88s, 439 tokens de saída">
+                    <div class="bar-ttft" style="height:32.8%"></div>
+                </div>
+                <div class="bar-label">#10</div>
+            </div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Detalhamento das chamadas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Modelo</th>
+                    <th>Chamada</th>
+                    <th>Status</th>
+                    <th>HTTP</th>
+                    <th>TTFT</th>
+                    <th>TPOT</th>
+                    <th>Tok/s</th>
+                    <th>E2E</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>Raciocínio</th>
+                    <th>Retries</th>
+                </tr>
+            </thead>
+            <tbody>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#01</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>5.29s</td>
+            <td>22ms</td>
+            <td>45.3</td>
+            <td>17.98s</td>
+            <td>41</td>
+            <td>575</td>
+            <td>445</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#02</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>4.19s</td>
+            <td>22ms</td>
+            <td>45.0</td>
+            <td>17.91s</td>
+            <td>41</td>
+            <td>617</td>
+            <td>517</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#03</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>4.64s</td>
+            <td>20ms</td>
+            <td>49.7</td>
+            <td>15.79s</td>
+            <td>41</td>
+            <td>554</td>
+            <td>447</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#04</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>3.69s</td>
+            <td>20ms</td>
+            <td>49.3</td>
+            <td>17.95s</td>
+            <td>41</td>
+            <td>703</td>
+            <td>589</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#05</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>4.15s</td>
+            <td>21ms</td>
+            <td>47.6</td>
+            <td>19.79s</td>
+            <td>41</td>
+            <td>744</td>
+            <td>619</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#06</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>4.56s</td>
+            <td>21ms</td>
+            <td>47.6</td>
+            <td>22.98s</td>
+            <td>41</td>
+            <td>877</td>
+            <td>731</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#07</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>4.25s</td>
+            <td>21ms</td>
+            <td>47.3</td>
+            <td>20.10s</td>
+            <td>41</td>
+            <td>750</td>
+            <td>625</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#08</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>6.98s</td>
+            <td>21ms</td>
+            <td>47.8</td>
+            <td>24.71s</td>
+            <td>41</td>
+            <td>848</td>
+            <td>732</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#09</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>4.71s</td>
+            <td>20ms</td>
+            <td>49.0</td>
+            <td>19.76s</td>
+            <td>41</td>
+            <td>737</td>
+            <td>627</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#6366f1"></span>glm-5.2</td>
+            <td>#10</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>4.20s</td>
+            <td>21ms</td>
+            <td>47.8</td>
+            <td>21.94s</td>
+            <td>41</td>
+            <td>848</td>
+            <td>719</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#01</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.76s</td>
+            <td>12ms</td>
+            <td>81.1</td>
+            <td>7.28s</td>
+            <td>41</td>
+            <td>448</td>
+            <td>305</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#02</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.79s</td>
+            <td>14ms</td>
+            <td>74.0</td>
+            <td>12.11s</td>
+            <td>41</td>
+            <td>764</td>
+            <td>614</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#03</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.77s</td>
+            <td>28ms</td>
+            <td>36.2</td>
+            <td>15.13s</td>
+            <td>41</td>
+            <td>484</td>
+            <td>352</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#04</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.75s</td>
+            <td>28ms</td>
+            <td>36.1</td>
+            <td>16.17s</td>
+            <td>41</td>
+            <td>521</td>
+            <td>403</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#05</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.65s</td>
+            <td>28ms</td>
+            <td>36.2</td>
+            <td>19.04s</td>
+            <td>41</td>
+            <td>629</td>
+            <td>464</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#06</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.76s</td>
+            <td>28ms</td>
+            <td>36.2</td>
+            <td>19.54s</td>
+            <td>41</td>
+            <td>643</td>
+            <td>506</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#07</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.73s</td>
+            <td>28ms</td>
+            <td>36.3</td>
+            <td>13.91s</td>
+            <td>41</td>
+            <td>442</td>
+            <td>305</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#08</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.70s</td>
+            <td>28ms</td>
+            <td>36.0</td>
+            <td>14.60s</td>
+            <td>41</td>
+            <td>464</td>
+            <td>303</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#09</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>1.98s</td>
+            <td>14ms</td>
+            <td>72.6</td>
+            <td>7.57s</td>
+            <td>41</td>
+            <td>406</td>
+            <td>279</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td><span class="dot" style="background:#10b981"></span>glm-5.3</td>
+            <td>#10</td>
+            <td><span class="badge ok">OK</span></td>
+            <td>200</td>
+            <td>2.88s</td>
+            <td>13ms</td>
+            <td>74.3</td>
+            <td>8.79s</td>
+            <td>41</td>
+            <td>439</td>
+            <td>313</td>
+            <td>0</td>
+        </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>Relatório gerado automaticamente por maas_parallel_test.py</footer>
+</div>
+</body>
+</html>
