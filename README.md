@@ -48,37 +48,37 @@ O limitador local ajuda a respeitar uma taxa de envio, mas não garante ausênci
 
 ## Resultado no terminal
 
-Durante a execução, cada chamada concluída imprime modelo, identificador, status HTTP, latência E2E, TTFT e, quando houver, tentativas repetidas. Ao final, há um resumo por modelo. O exemplo abaixo é de uma execução anterior com 10 chamadas por modelo; o padrão atual é 100 chamadas por modelo:
+Durante a execução, cada chamada concluída imprime modelo, identificador, status HTTP, latência E2E, TTFT e, quando houver, tentativas repetidas. Ao final, há um resumo por modelo. A saída abaixo foi obtida em uma execução real em 23/09/2026, com 100 chamadas por modelo:
 
 ```text
-Executando 20 chamadas em paralelo (10 por modelo, modelos: glm-5.2, glm-5.3)...
+Executando 200 chamadas em paralelo (100 por modelo, modelos: glm-5.2, glm-5.3)...
 
-[glm-5.3] chamada 03 | OK  | HTTP 200 | E2E: 7.50s | TTFT: 1728ms | resposta: ...
+[glm-5.3] chamada 03 | OK | HTTP 200 | E2E: 15.30s | TTFT: 1658ms | resposta: A inteligência artificial (IA) é um campo da ciência...
 ...
 
 RESUMO
 
 Modelo: glm-5.2
-  Sucessos:        10/10 (error rate: 0.0%)
-  Retries totais:  2
-  TTFT médio:      5568ms (P50: 5695ms, P90: 6686ms)
+  Sucessos:        100/100 (error rate: 0.0%)
+  Retries totais:  18
+  TTFT médio:      4871ms (P50: 4846ms, P90: 6811ms)
   TPOT médio:      21ms
-  Output tok/s:    47.7
-  E2E média:       20.52s (P50: 18.20s, P90: 25.91s, P99: 33.65s)
-  QPS atingido:    0.28 | TPM atingido: 12855
-  Tokens médios:   in 41 / out 715 (raciocínio: 593)
+  Output tok/s:    48.2
+  E2E média:       20.87s (P50: 20.59s, P90: 25.96s, P99: 28.22s)
+  QPS atingido:    1.22 | TPM atingido: 59371
+  Tokens médios:   in 41 / out 769 (raciocínio: 646)
 
 Modelo: glm-5.3
-  Sucessos:        10/10 (error rate: 0.0%)
-  Retries totais:  1
-  TTFT médio:      1950ms (P50: 1858ms, P90: 2155ms)
-  TPOT médio:      18ms
-  Output tok/s:    63.4
-  E2E média:       9.46s (P50: 8.87s, P90: 13.76s, P99: 13.79s)
-  QPS atingido:    0.28 | TPM atingido: 8132
-  Tokens médios:   in 41 / out 437 (raciocínio: 281)
+  Sucessos:        100/100 (error rate: 0.0%)
+  Retries totais:  14
+  TTFT médio:      1841ms (P50: 1758ms, P90: 2032ms)
+  TPOT médio:      19ms
+  Output tok/s:    59.5
+  E2E média:       11.78s (P50: 10.34s, P90: 18.11s, P99: 22.07s)
+  QPS atingido:    1.22 | TPM atingido: 42388
+  Tokens médios:   in 41 / out 538 (raciocínio: 390)
 
-Tempo total de execução (todas em paralelo): 35.27s
+Tempo total de execução (todas em paralelo): 81.90s
 Relatório HTML gerado em: .../maas_report.html
 ```
 
@@ -88,7 +88,7 @@ Esses valores são de uma execução específica e servem apenas para ilustrar o
 
 Ao terminar, o script grava `maas_report.html` na mesma pasta do arquivo Python. Abra-o em um navegador. O relatório apresenta cards de resumo, tabelas de métricas, gráfico de latência por chamada e detalhes individuais.
 
-As capturas abaixo são de uma execução de referência anterior, com 10 chamadas por modelo. Para ver os resultados da configuração atual (100 chamadas por modelo), abra o relatório gerado após executar o script.
+As capturas abaixo correspondem à execução de 23/09/2026, com 100 chamadas por modelo. Cada nova execução substitui o relatório e estas imagens precisam ser regeneradas para acompanhar os novos resultados.
 
 ### Resumo da execução
 
