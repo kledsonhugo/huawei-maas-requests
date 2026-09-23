@@ -15,9 +15,6 @@ usadas para avaliar inferência de LLM:
     Error rate                      -> % de requisições que falharam
     Tokens/request                  -> tokens de entrada + saída por requisição
 
-    NPU utilization (Ascend) não é mensurável via API de inferência:
-    requer monitoramento de infraestrutura (Huawei Cloud Eye / ModelArts).
-
 Requisitos:
     - Python 3.8+
     - pip install requests
@@ -651,9 +648,7 @@ def build_html(results: list, total_elapsed: float) -> str:
             </tbody>
         </table>
         <p class="note">QPS/TPM refletem a capacidade <strong>atingida neste teste</strong>
-            (limitada pelo rate limit de {RATE_LIMIT_RPS} req/s do endpoint), não o limite do serviço.
-            NPU utilization (Ascend) não é mensurável via API de inferência — requer
-            Huawei Cloud Eye / console ModelArts.</p>
+            (limitada pelo rate limit de {RATE_LIMIT_RPS} req/s do endpoint), não o limite do serviço.</p>
     </div>
 
     <div class="section">

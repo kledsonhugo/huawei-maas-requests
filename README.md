@@ -1,4 +1,4 @@
-# Benchmark paralelo de modelos Huawei MaaS
+# Teste de requisições aos modelos Huawei MaaS
 
 Script em Python para executar requisições concorrentes à API de chat OpenAI-compatible do Huawei MaaS. As chamadas usam streaming e geram um resumo no terminal e um relatório HTML com métricas de latência, throughput, tokens e confiabilidade.
 
@@ -90,23 +90,23 @@ Ao terminar, o script grava `maas_report.html` na mesma pasta do arquivo Python.
 
 ### Resumo da execução
 
-![Cards com chamadas bem-sucedidas, error rate, tempo total e TTFT médio](docs/report_cards.png)
+![Cards com chamadas bem-sucedidas, error rate, tempo total e TTFT médio](image/report_cards.png)
 
 ### Latência e geração
 
-![Tabela de TTFT, TPOT, tokens por segundo e percentis de latência](docs/report_metrics.png)
+![Tabela de TTFT, TPOT, tokens por segundo e percentis de latência](image/report_metrics.png)
 
 ### Capacidade, confiabilidade e tokens
 
-![Tabela de QPS, TPM, sucessos, erros e contagem de tokens](docs/report_capacity.png)
+![Tabela de QPS, TPM, sucessos, erros e contagem de tokens](image/report_capacity.png)
 
 ### Latência por chamada
 
-![Gráfico comparando latência E2E e TTFT por chamada](docs/report_chart.png)
+![Gráfico comparando latência E2E e TTFT por chamada](image/report_chart.png)
 
 ### Detalhes das chamadas
 
-![Tabela com status e métricas individuais de cada requisição](docs/report_details.png)
+![Tabela com status e métricas individuais de cada requisição](image/report_details.png)
 
 ## Como interpretar as métricas
 
@@ -121,7 +121,6 @@ Ao terminar, o script grava `maas_report.html` na mesma pasta do arquivo Python.
 | **TPM atingido** | Tokens de entrada e completion por minuto durante o teste. Também é throughput observado. |
 | **Error rate** | Percentual de chamadas que terminaram sem sucesso, após as tentativas configuradas. |
 | **Tokens/request** | Contagens de entrada, saída e raciocínio reportadas pela API, quando disponíveis. Tokens de raciocínio são uma parte dos tokens de saída; não devem ser somados novamente ao total. |
-| **NPU utilization** | Não está disponível na API de inferência usada por este script. Requer métricas de infraestrutura, como Huawei Cloud Eye/ModelArts, e permissões apropriadas. |
 
 O relatório mostra a média de QPS/TPM por modelo usando a duração total da execução compartilhada. Como os modelos são testados simultaneamente, esses valores não representam uma medição isolada nem o limite máximo de cada modelo.
 
