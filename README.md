@@ -1,4 +1,4 @@
-# Teste de requisições aos modelos Huawei MaaS
+# Teste de requisições a modelos Huawei MaaS
 
 Script em Python para executar requisições concorrentes à API de chat OpenAI-compatible do Huawei MaaS. As chamadas usam streaming e geram um resumo no terminal e um relatório HTML com métricas de latência, throughput, tokens e confiabilidade.
 
@@ -126,7 +126,7 @@ As capturas abaixo são de uma execução de referência anterior, com 10 chamad
 
 O relatório mostra a média de QPS/TPM por modelo usando a duração total da execução compartilhada. Como os modelos são testados simultaneamente, esses valores não representam uma medição isolada nem o limite máximo de cada modelo.
 
-## Uso por outras pessoas
+## Como usar
 
 1. Obtenha acesso ao Huawei MaaS e confirme que sua conta pode invocar os modelos desejados.
 2. Disponibilize Python 3.8+ e instale `requests`.
