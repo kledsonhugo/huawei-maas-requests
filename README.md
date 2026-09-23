@@ -1,6 +1,7 @@
 # Teste de requisições a modelos Huawei MaaS
 
-Script em Python para executar requisições concorrentes à API de chat OpenAI-compatible do Huawei MaaS. As chamadas usam streaming e geram um resumo no terminal e um relatório HTML com métricas de latência, throughput, tokens e confiabilidade.
+Script em Python para executar requisições concorrentes à API de chat OpenAI-compatible do Huawei MaaS.
+As chamadas usam streaming e geram um resumo no terminal e um relatório HTML com métricas de latência, throughput, tokens e confiabilidade.
 
 ## Requisitos
 
@@ -20,12 +21,6 @@ Configure a chave da API no ambiente. Não a coloque no código nem a compartilh
 export MAAS_API_KEY="sua-chave-aqui"
 ```
 
-No PowerShell:
-
-```powershell
-$env:MAAS_API_KEY = "sua-chave-aqui"
-```
-
 ## Executar o teste
 
 Na pasta do projeto, execute:
@@ -34,7 +29,11 @@ Na pasta do projeto, execute:
 python3 maas_parallel_test.py
 ```
 
-Por padrão, o script envia 100 chamadas para cada modelo em `MODELS` (`glm-5.2` e `glm-5.3`), totalizando 200 chamadas e até 200 workers (`MAX_WORKERS = len(MODELS) * CALLS_PER_MODEL`). Um limitador compartilhado mantém o envio em até 4 requisições por segundo; respostas HTTP 429 são repetidas com espera exponencial, até o máximo configurado. As chamadas dos modelos concorrem no mesmo teste, portanto os resultados refletem essa carga compartilhada.
+Por padrão, o script envia 100 chamadas para cada modelo em `MODELS` (`glm-5.2` e `glm-5.3`), totalizando 200 chamadas e até 200 workers (`MAX_WORKERS = len(MODELS) * CALLS_PER_MODEL`).
+
+Um limitador compartilhado mantém o envio em até 4 requisições por segundo. Respostas HTTP 429 são repetidas com espera exponencial, até o máximo configurado.
+
+As chamadas dos modelos concorrem no mesmo teste, portanto os resultados refletem essa carga compartilhada.
 
 Para adaptar o teste, altere no início de `maas_parallel_test.py`:
 
@@ -44,11 +43,13 @@ Para adaptar o teste, altere no início de `maas_parallel_test.py`:
 - `MAX_RETRIES` e `TIMEOUT`: política de repetição e tempo limite.
 - `PROMPT`: solicitação enviada ao modelo. Para medir geração, use um prompt que produza uma resposta com quantidade razoável de tokens.
 
-O limitador local ajuda a respeitar uma taxa de envio, mas não garante ausência de 429: quotas podem ser compartilhadas, variar por modelo ou ter janelas diferentes. Não aumente a taxa sem confirmar os limites da sua conta.
+O limitador local ajuda a respeitar uma taxa de envio, mas não garante ausência de 429. Quotas podem ser compartilhadas, variar por modelo ou ter janelas diferentes. Não aumente a taxa sem confirmar os limites da sua conta.
 
 ## Resultado no terminal
 
-Durante a execução, cada chamada concluída imprime modelo, identificador, status HTTP, latência E2E, TTFT e, quando houver, tentativas repetidas. Ao final, há um resumo por modelo. A saída abaixo foi obtida em uma execução real em 23/09/2026, com 100 chamadas por modelo:
+Durante a execução, cada chamada concluída imprime modelo, identificador, status HTTP, latência E2E, TTFT e, quando houver, tentativas repetidas.
+
+Ao final, há um resumo por modelo. A saída abaixo foi obtida em uma execução real com 100 chamadas por modelo:
 
 ```text
 Executando 200 chamadas em paralelo (100 por modelo, modelos: glm-5.2, glm-5.3)...
@@ -82,13 +83,19 @@ Tempo total de execução (todas em paralelo): 81.90s
 Relatório HTML gerado em: .../maas_report.html
 ```
 
-Esses valores são de uma execução específica e servem apenas para ilustrar o formato. Latência, quantidade de tokens, retries e throughput variam com o prompt, carga, quota, região e estado do serviço.
+Esses valores são de uma execução específica e servem apenas para ilustrar o formato.
+
+Latência, quantidade de tokens, retries e throughput variam com o prompt, carga, quota, região e estado do serviço.
 
 ## Relatório HTML
 
-Ao terminar, o script grava `maas_report.html` na mesma pasta do arquivo Python. Abra-o em um navegador. O relatório apresenta cards de resumo, tabelas de métricas, gráfico de latência por chamada e detalhes individuais.
+Ao terminar, o script grava `maas_report.html` na mesma pasta do arquivo Python. Abra-o em um navegador.
 
-As capturas abaixo correspondem à execução de 23/09/2026, com 100 chamadas por modelo. Cada nova execução substitui o relatório e estas imagens precisam ser regeneradas para acompanhar os novos resultados.
+O relatório apresenta cards de resumo, tabelas de métricas, gráfico de latência por chamada e detalhes individuais.
+
+As capturas abaixo correspondem à execução com 100 chamadas por modelo.
+
+Cada nova execução substitui o relatório para acompanhar os novos resultados.
 
 ### Resumo da execução
 
@@ -124,7 +131,9 @@ As capturas abaixo correspondem à execução de 23/09/2026, com 100 chamadas po
 | **Error rate** | Percentual de chamadas que terminaram sem sucesso, após as tentativas configuradas. |
 | **Tokens/request** | Contagens de entrada, saída e raciocínio reportadas pela API, quando disponíveis. Tokens de raciocínio são uma parte dos tokens de saída; não devem ser somados novamente ao total. |
 
-O relatório mostra a média de QPS/TPM por modelo usando a duração total da execução compartilhada. Como os modelos são testados simultaneamente, esses valores não representam uma medição isolada nem o limite máximo de cada modelo.
+O relatório mostra a média de QPS/TPM por modelo usando a duração total da execução compartilhada.
+
+Como os modelos são testados simultaneamente, esses valores não representam uma medição isolada nem o limite máximo de cada modelo.
 
 ## Como usar
 
@@ -134,4 +143,8 @@ O relatório mostra a média de QPS/TPM por modelo usando a duração total da e
 4. Copie/clone este projeto e ajuste modelos, quantidade de chamadas, prompt e taxa de envio para a quota da sua conta.
 5. Execute `python3 maas_parallel_test.py` e abra o `maas_report.html` gerado.
 
-Cada usuário deve usar sua própria chave e respeitar as políticas, quotas e custos da conta. Para comparar modelos de forma mais controlada, mantenha o mesmo prompt e configuração, repita o teste em condições equivalentes e avalie várias execuções; uma amostra pequena pode ser afetada por variação temporária do serviço.
+Cada usuário deve usar sua própria chave e respeitar as políticas, quotas e custos da conta.
+
+Para comparar modelos de forma mais controlada, mantenha o mesmo prompt e configuração, repita o teste em condições equivalentes e avalie várias execuções.
+
+Uma amostra pequena pode ser afetada por variação temporária do serviço.
